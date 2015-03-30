@@ -1,8 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+    </style>
+
+
+    <style name="IndicationStyle" parent="android:Widget.TextView">
+    </style>
+
+    <style name="IndicationChangingStyle" parent="android:Widget.TextView">
+        <item name="android:paddingLeft">@dimen/padding_left_for_last_changing</item>
+        <item name="android:textColor">@color/increase</item>
+        <item name="android:textSize">@dimen/text_size_indicate_changed</item>
     </style>
 
 </resources>

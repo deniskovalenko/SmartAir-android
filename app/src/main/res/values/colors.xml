@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<color name="increase">#ff00ff00</color>
+<color name="decrease">#ffff0000</color>
+</resources>

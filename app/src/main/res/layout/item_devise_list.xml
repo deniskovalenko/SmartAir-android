@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="10dp"
     android:layout_width="match_parent"
@@ -13,45 +15,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!--temperature-->
-    <TextView
-        android:id="@+id/tvTemperature"
-        android:text="22.2"
+
+    <RelativeLayout
+        android:paddingTop="@dimen/padding_top_from_device_name"
+        android:paddingLeft="@dimen/padding_for_container_with_indicates"
+        android:paddingRight="@dimen/padding_for_container_with_indicates"
         android:layout_below="@id/tvDeviceAlias"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tvTemperatureLabel"
-        android:text="* C"
-        android:layout_alignBottom="@id/tvTemperature"
-        android:layout_toRightOf="@id/tvTemperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <!--temperature-->
+        <TextView
+            style="@style/IndicationStyle"
+            android:id="@+id/tvTemperature"
+            android:text="22.2* C"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    <!--CO2-->
+        <TextView
+            style="@style/IndicationChangingStyle"
+            android:id="@+id/tvTemperatureChanged"
+            android:text="-0.3"
+            android:layout_toRightOf="@id/tvTemperature"
+            android:layout_alignBottom="@id/tvTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="RtlHardcoded" />
 
-    <TextView
-        android:id="@+id/tvCO2Label"
-        android:layout_below="@id/tvDeviceAlias"
-        android:text="CO2 "
-        android:layout_toLeftOf="@+id/tvCO2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/tvCO2"
-        android:text="18.8"
-        android:layout_alignBottom="@id/tvCO2Label"
-        android:layout_toLeftOf="@+id/tvCO2EndLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <!--CO2-->
+        <TextView
+            style="@style/IndicationStyle"
+            android:id="@+id/tvCO2"
+            android:text="CO2 18.8%"
+            android:layout_toLeftOf="@+id/tvCO2Changed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="RtlHardcoded" />
 
-    <TextView
-        android:id="@+id/tvCO2EndLabel"
-        android:text=" %"
-        android:layout_alignBottom="@id/tvCO2Label"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <TextView
+            style="@style/IndicationChangingStyle"
+            android:id="@+id/tvCO2Changed"
+            android:text="+0.8"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/tvTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="RtlHardcoded" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

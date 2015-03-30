@@ -1,6 +1,7 @@
 package ua.statisticco2app.ui.activities;
 
 import ua.statisticco2app.R;
+import ua.statisticco2app.ui.fragments.DevicesListFragment;
 import ua.statisticco2app.ui.fragments.SimpleFragment;
 
 public class MainActivity extends BaseActivity {
@@ -16,6 +17,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onViewCreated() {
-        switchFragment(SimpleFragment.getInstance(), false);
+        switchFragment(DevicesListFragment.getInstance(), false);
     }
 }
