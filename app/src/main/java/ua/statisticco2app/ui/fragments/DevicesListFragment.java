@@ -17,7 +17,7 @@ public class DevicesListFragment extends BaseRefreshFragment {
     @InjectView(R.id.list)
     ListView list;
 
-    protected final long DEFAULT_USER = 550;
+    protected final String DEFAULT_USER = "700caba5-9d40-4d34-9d6c-b15e40c5425e";
 
     public static DevicesListFragment getInstance() {
         return new DevicesListFragment();

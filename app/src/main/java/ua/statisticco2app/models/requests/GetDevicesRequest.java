@@ -7,9 +7,9 @@ import ua.statisticco2app.models.responses.GetDevicesResponse;
 
 public class GetDevicesRequest extends RetrofitSpiceRequest<GetDevicesResponse, StatisticCO2Retrofit> {
 
-    private final long userId;
+    private final String userId;
 
-    public GetDevicesRequest(long userId) {
+    public GetDevicesRequest(String userId) {
         super(GetDevicesResponse.class, StatisticCO2Retrofit.class);
         this.userId = userId;
     }
