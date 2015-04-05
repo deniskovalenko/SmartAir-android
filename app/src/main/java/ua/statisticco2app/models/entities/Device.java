@@ -1,6 +1,6 @@
 package ua.statisticco2app.models.entities;
 
-public class Device {
+public class Device extends BaseEntity {
     String device_id;
     String device_name;
 
