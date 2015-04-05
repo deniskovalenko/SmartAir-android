@@ -1,5 +1,8 @@
 package ua.statisticco2app.ui.fragments;
 
+import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -9,10 +12,13 @@ import ua.statisticco2app.R;
 import ua.statisticco2app.StatisticCO2Application;
 import ua.statisticco2app.adapters.DeviceArrayAdapter;
 import ua.statisticco2app.components.SimpleRetrofitCallback;
+import ua.statisticco2app.constants.IntentConstants;
+import ua.statisticco2app.models.entities.Device;
 import ua.statisticco2app.models.requests.GetDevicesRequest;
 import ua.statisticco2app.models.responses.GetDevicesResponse;
+import ua.statisticco2app.ui.activities.StatisticActivity;
 
-public class DevicesListFragment extends BaseRefreshFragment {
+public class DevicesListFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener {
 
     @InjectView(R.id.list)
     ListView list;
@@ -35,6 +41,12 @@ public class DevicesListFragment extends BaseRefreshFragment {
     }
 
     @Override
+    protected void setListeners() {
+        super.setListeners();
+        list.setOnItemClickListener(this);
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.fragment_simple_list;
     }
@@ -49,7 +61,9 @@ public class DevicesListFragment extends BaseRefreshFragment {
                 new SimpleRetrofitCallback<GetDevicesResponse>() {
             @Override
             public void onRequestSuccess(GetDevicesResponse devices) {
-                ((DeviceArrayAdapter)list.getAdapter()).addAll(devices);
+                DeviceArrayAdapter adapter = (DeviceArrayAdapter) list.getAdapter();
+                adapter.clear();
+                adapter.addAll(devices);
                 getSwipeRefreshLayout().setRefreshing(false);
             }
 
@@ -62,4 +76,11 @@ public class DevicesListFragment extends BaseRefreshFragment {
     }
 
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), StatisticActivity.class);
+        Device device = (Device) parent.getItemAtPosition(position);
+        intent.putExtra(IntentConstants.DEVICE_ID, device.getDevice_id());
+        startActivity(intent);
+    }
 }
