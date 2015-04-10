@@ -1,6 +1,12 @@
 <resources>
-    <string name="app_name">Statistic CO2 App</string>
+    <string name="app_name">iBreathe</string>
 
-    <string name="temperature_template">22.2 °C</string>
-    <string name="co2_template">CO2 18.8%</string>
+    <!--device item-->
+    <string name="current_temperature" >%s °C</string>
+    <string name="current_co2" >CO2 %s ppm</string>
+    <string name="current_humidity" >%s %%</string>
+
+    <string name="change_temperature">%+.1f</string>
+    <string name="change_co2" >%+d</string>
+    <string name="change_humidity" >%+.1f</string>
 </resources>

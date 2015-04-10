@@ -23,7 +23,7 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
     @InjectView(R.id.list)
     ListView list;
 
-    protected final String DEFAULT_USER = "700caba5-9d40-4d34-9d6c-b15e40c5425e";
+    protected final String DEFAULT_USER = "700caba5-9d40-4d34-9d6c-b15e40c5425f";
 
     public static DevicesListFragment getInstance() {
         return new DevicesListFragment();
@@ -80,7 +80,7 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), StatisticActivity.class);
         Device device = (Device) parent.getItemAtPosition(position);
-        intent.putExtra(IntentConstants.DEVICE_ID, device.getDevice_id());
+        intent.putExtra(IntentConstants.DEVICE_ID, device.getDeviceId());
         startActivity(intent);
     }
 }

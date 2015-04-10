@@ -18,6 +18,24 @@ public class DeviceItemHolder extends ViewHolderBase {
     @InjectView(R.id.tvDeviceAlias)
     TextView tvDeviceAlias;
 
+    @InjectView(R.id.tvCO2)
+    TextView tvCO2;
+
+    @InjectView(R.id.tvCO2Changed)
+    TextView tvCO2Changed;
+
+    @InjectView(R.id.tvTemperature)
+    TextView tvTemperature;
+
+    @InjectView(R.id.tvTemperatureChanged)
+    TextView tvTemperatureChanged;
+
+    @InjectView(R.id.tvHumidity)
+    TextView tvHumidity;
+
+    @InjectView(R.id.tvHumidityChanged)
+    TextView tvHumidityChanged;
+
     protected DeviceItemHolder(@NotNull View v) {
         super(v);
     }
@@ -44,5 +62,29 @@ public class DeviceItemHolder extends ViewHolderBase {
 
     public TextView getTvDeviceAlias() {
         return tvDeviceAlias;
+    }
+
+    public TextView getTvCO2() {
+        return tvCO2;
+    }
+
+    public TextView getTvCO2Changed() {
+        return tvCO2Changed;
+    }
+
+    public TextView getTvTemperature() {
+        return tvTemperature;
+    }
+
+    public TextView getTvTemperatureChanged() {
+        return tvTemperatureChanged;
+    }
+
+    public TextView getTvHumidity() {
+        return tvHumidity;
+    }
+
+    public TextView getTvHumidityChanged() {
+        return tvHumidityChanged;
     }
 }

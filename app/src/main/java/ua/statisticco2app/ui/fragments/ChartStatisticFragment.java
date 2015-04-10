@@ -2,8 +2,6 @@ package ua.statisticco2app.ui.fragments;
 
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -27,9 +25,6 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
     @InjectView(R.id.chartTemperature)
     LineChart chartTemperature;
 
-    @InjectView(R.id.toolbar)
-    Toolbar toolbar;
-
 
     public static ChartStatisticFragment getInstance() {
         return new ChartStatisticFragment();
@@ -42,7 +37,6 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
 
     @Override
     protected void onViewCreated() {
-        ((ActionBarActivity)getActivity()).setSupportActionBar(toolbar);
         initView();
 //        requestOnServer();
     }
@@ -108,19 +102,8 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
             vals1.add(new Entry(val, i));
         }
 
-        // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(vals1, "DataSet 1");
-        set1.setDrawCubic(true);
-        set1.setCubicIntensity(0.2f);
-        //set1.setDrawFilled(true);
-        set1.setDrawCircles(false);
-        set1.setLineWidth(2f);
-        set1.setCircleSize(5f);
-        set1.setHighLightColor(Color.rgb(244, 117, 117));
-        set1.setColor(Color.rgb(104, 241, 175));
-        set1.setFillColor(ColorTemplate.getHoloBlue());
-
         // create a data object with the datasets
+        LineDataSet set1 = createLineDataSet(vals1, "DataSet 1");
         LineData data = new LineData(xVals, set1);
         data.setValueTextSize(9f);
         data.setDrawValues(false);
@@ -132,6 +115,21 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
     @Override
     public void onRefresh() {
         requestOnServer();
+    }
+
+    public LineDataSet createLineDataSet(ArrayList<Entry> vals1, String deacription) {
+        // create a dataset and give it a type
+        LineDataSet set1 = new LineDataSet(vals1, deacription);
+        set1.setDrawCubic(true);
+        set1.setCubicIntensity(0.2f);
+        //set1.setDrawFilled(true);
+        set1.setDrawCircles(false);
+        set1.setLineWidth(2f);
+        set1.setCircleSize(5f);
+        set1.setHighLightColor(Color.rgb(244, 117, 117));
+        set1.setColor(Color.rgb(104, 241, 175));
+        set1.setFillColor(ColorTemplate.getHoloBlue());
+        return set1;
     }
 
     protected void requestOnServer() {
@@ -151,19 +149,8 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
                     temperatures.add(new Entry(indication.getTemperature(), index++));
                 }
 
-
                 // create a dataset and give it a type
-                LineDataSet set1 = new LineDataSet(temperatures, "Temperatures");
-                set1.setDrawCubic(true);
-                set1.setCubicIntensity(0.2f);
-//set1.setDrawFilled(true);
-                set1.setDrawCircles(false);
-                set1.setLineWidth(2f);
-                set1.setCircleSize(5f);
-                set1.setHighLightColor(Color.rgb(244, 117, 117));
-                set1.setColor(Color.rgb(104, 241, 175));
-                set1.setFillColor(ColorTemplate.getHoloBlue());
-
+                LineDataSet set1 = createLineDataSet(temperatures, "Temperatures");
 
                 // create a data object with the datasets
                 LineData data = new LineData(xData, set1);

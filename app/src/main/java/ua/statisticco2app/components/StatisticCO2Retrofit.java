@@ -8,7 +8,7 @@ import ua.statisticco2app.models.responses.GetStatisticResponse;
 public interface StatisticCO2Retrofit {
 
     @GET("/api/devices")
-    GetDevicesResponse getDevices(@Query("userid") String userId);
+    GetDevicesResponse getDevices(@Query("userId") String userId);
 
     @GET("/json_statistic")
     GetStatisticResponse getStatistic();
