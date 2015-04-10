@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize" />
 
-    <ua.statisticco2app.ui.widgets.SlidingTabLayout
+    <ua.ibreathe.ui.widgets.SlidingTabLayout
         android:id="@+id/slidingTabLayout"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
