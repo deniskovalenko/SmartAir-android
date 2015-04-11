@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="ua.ibreathe">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.smartair.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -8,13 +8,13 @@
 
     <application
         android:allowBackup="true"
-        android:name="StatisticCO2Application"
+        android:name=".SmartAirApplication"
         android:label="@string/app_name"
         android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme">
 
         <!--Service-->
-        <service android:name=".components.StatisticCO2SpiceService" />
+        <service android:name=".components.SmartAirSpiceService" />
 
         <!-- Activities -->
         <activity

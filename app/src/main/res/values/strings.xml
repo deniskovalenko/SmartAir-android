@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">iBreathe</string>
+    <string name="app_name">SmartAir</string>
 
     <!--device item-->
     <string name="current_temperature" >%s °C</string>
