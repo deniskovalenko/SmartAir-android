@@ -60,6 +60,6 @@ public class SimpleFragment extends BaseRefreshFragment implements SwipeRefreshL
     @Override
     public void onRefresh() {
         Log.d(TAG, "onRefresh");
-        SmartAirApplication.getInstance().getSpiceManager().execute(new GetStatisticRequest(), callback);
+//        SmartAirApplication.getInstance().getSpiceManager().execute(new GetStatisticRequest(), callback);
     }
 }

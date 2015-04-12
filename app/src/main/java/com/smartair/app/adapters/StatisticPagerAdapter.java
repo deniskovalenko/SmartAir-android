@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.smartair.app.ui.fragments.ChartStatisticFragment;
 
 public class StatisticPagerAdapter extends FragmentPagerAdapter {
-    String[] titles = {"Temperature", "CO2", "etc"};
+    String[] titles = {"Temperature", "CO2", "Humidity"};
 
     public StatisticPagerAdapter(FragmentManager fm) {
         super(fm);

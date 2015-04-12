@@ -11,12 +11,15 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.InjectView;
 import com.smartair.app.R;
 import com.smartair.app.SmartAirApplication;
 import com.smartair.app.components.SimpleRetrofitCallback;
+import com.smartair.app.constants.IntentConstants;
 import com.smartair.app.models.entities.Indication;
 import com.smartair.app.models.requests.GetStatisticRequest;
 import com.smartair.app.models.responses.GetStatisticResponse;
@@ -38,7 +41,7 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
     @Override
     protected void onViewCreated() {
         initView();
-//        requestOnServer();
+        requestOnServer();
     }
 
     @Override
@@ -76,22 +79,22 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
         chartTemperature.getAxisRight().setEnabled(false);
 
 
-        // add data
-        setData(45, 100);
-
-        chartTemperature.getLegend().setEnabled(false);
-
-        chartTemperature.animateXY(2000, 2000);
-
-        // dont forget to refresh the drawing
-        chartTemperature.invalidate();
+//        // add data
+//        setData(6, 50);
+//
+//        chartTemperature.getLegend().setEnabled(false);
+//
+//        chartTemperature.animateXY(2000, 2000);
+//
+//        // dont forget to refresh the drawing
+//        chartTemperature.invalidate();
     }
 
     private void setData(int count, float range) {
 
         ArrayList<String> xVals = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            xVals.add((1990 +i) + "");
+            xVals.add("17:" + String.format("%2d", i * 10));
         }
 
         ArrayList<Entry> vals1 = new ArrayList<>();
@@ -133,7 +136,7 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
     }
 
     protected void requestOnServer() {
-        SmartAirApplication.getInstance().getSpiceManager().execute(new GetStatisticRequest(), new SimpleRetrofitCallback<GetStatisticResponse>() {
+        SmartAirApplication.getInstance().getSpiceManager().execute(new GetStatisticRequest(getActivity().getIntent().getStringExtra(IntentConstants.DEVICE_ID)), new SimpleRetrofitCallback<GetStatisticResponse>() {
 
             @Override
             public void onRequestSuccess(GetStatisticResponse indications) {
@@ -142,11 +145,10 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
                 ArrayList<String> xData = new ArrayList<>();
                 ArrayList<Entry> temperatures = new ArrayList<>();
                 int index = 0;
-
+                SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
                 for (Indication indication : indications) {
-                    //xData.add(indication.getDate());
-                    xData.add(index + "");
-                    temperatures.add(new Entry(indication.getTemperature(), index++));
+                    xData.add(dateFormat.format(new Date(indication.getDate())));
+                    temperatures.add(new Entry(indication.getCo2(), index++));
                 }
 
                 // create a dataset and give it a type

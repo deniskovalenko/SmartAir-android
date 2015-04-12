@@ -10,6 +10,6 @@ public interface SmartAirRetrofit {
     @GET("/api/devices")
     GetDevicesResponse getDevices(@Query("userId") String userId);
 
-    @GET("/json_statistic")
-    GetStatisticResponse getStatistic();
+    @GET("/api/statistic")
+    GetStatisticResponse getStatistic(@Query("deviceId") String deviceId, @Query("startDate") long startDate, @Query("endDate") long endDate);
 }

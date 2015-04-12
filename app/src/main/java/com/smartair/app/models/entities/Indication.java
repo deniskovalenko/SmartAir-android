@@ -1,30 +1,31 @@
 package com.smartair.app.models.entities;
 
+import android.content.ContentValues;
 import android.provider.BaseColumns;
 import android.util.Log;
 
 public class Indication {
-    private String device_name;
-    private String date;
+    private String deviceId;
+    private long date;
     private float temperature;
-    private float co2;
+    private int co2;
     private float humidity;
 
     public Indication() {}
 
-    public String getDevice_name() {
-        return device_name;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setDevice_name(String device_name) {
-        this.device_name = device_name;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -36,11 +37,11 @@ public class Indication {
         this.temperature = temperature;
     }
 
-    public float getCo2() {
+    public int getCo2() {
         return co2;
     }
 
-    public void setCo2(float co2) {
+    public void setCo2(int co2) {
         this.co2 = co2;
     }
 
@@ -52,19 +53,35 @@ public class Indication {
         this.humidity = humidity;
     }
 
+    public ContentValues toCV() {
+        ContentValues cv = new ContentValues();
+        cv.put(Contract.DATE, date);
+        cv.put(Contract.DEVICE_ID, deviceId);
+
+        cv.put(Contract.CO2, co2);
+        cv.put(Contract.TEMPERATURE, temperature);
+        cv.put(Contract.HUMIDITY, humidity);
+        return cv;
+    }
+
     public static String createTableQuery() {
         Log.d(Indication.class.getSimpleName(), "create table");
-        return String.format("create table %s (%s text primary key, %s text)",
+        return String.format("create table %s (%s int autoincrement primary key, %s int, %s text, %s int, %s real, %s real)",
                 Contract.TABLE_NAME,
                 Contract._ID,
-                Contract.DEVICE_NAME);
+                Contract.DATE,
+                Contract.DEVICE_ID,
+                Contract.CO2,
+                Contract.TEMPERATURE,
+                Contract.HUMIDITY);
     }
 
     public static class Contract implements BaseColumns {
-        public static String DEVICE_NAME = "deviceName";
         public static String TABLE_NAME = "indications";
-        public static String TEMPERATURE = "temperature";
+        public static String DATE = "date";
+        public static String DEVICE_ID = "deviceId";
         public static String CO2 = "co2";
+        public static String TEMPERATURE = "temperature";
         public static String HUMIDITY = "humidity";
     }
 }
