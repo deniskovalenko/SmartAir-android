@@ -8,7 +8,18 @@ import com.smartair.app.constants.DatabaseConstants;
 import com.smartair.app.models.entities.Device;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
-    public DatabaseHelper(Context context) {
+    private static DatabaseHelper instance;
+
+    public static void init(Context context) {
+        instance = new DatabaseHelper(context);
+    }
+    public static DatabaseHelper getInstance() {
+        if (instance == null)
+            throw new IllegalStateException("does not init");
+        return instance;
+    }
+
+    private DatabaseHelper(Context context) {
         super(context, DatabaseConstants.DATABASE_NAME, null, DatabaseConstants.VERSION);
     }
 

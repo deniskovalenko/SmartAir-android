@@ -1,30 +1,35 @@
 package com.smartair.app.adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 
 import com.smartair.app.R;
 import com.smartair.app.models.entities.Device;
 import com.smartair.app.ui.holders.DeviceItemHolder;
 
-@Deprecated
-public class DeviceArrayAdapter extends ArrayAdapter<Device> {
+public class DeviceCursorAdapter extends CursorAdapter {
     DeviceItemHolder.ViewCreator creator;
+    Context context;
 
-    public DeviceArrayAdapter(Context context) {
-        super(context, DeviceItemHolder.RES_ID, 0);
+    public DeviceCursorAdapter(Context context, Cursor c) {
+        super(context, c, 0);
         creator = DeviceItemHolder.initCreator(context);
+        this.context = context;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null)
-            convertView = creator.create(parent);
-        DeviceItemHolder holder = DeviceItemHolder.retrieve(convertView, position);
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        return creator.create(parent);
+    }
 
-        Device device = getItem(position);
+    @Override
+    public void bindView(View convertView, Context context, Cursor cursor) {
+        DeviceItemHolder holder = DeviceItemHolder.retrieve(convertView, -1);
+
+        Device device = Device.fromCursor(cursor);
         holder.getTvDeviceAlias().setText(device.getDeviceName());
 
         holder.getTvCO2().setText(formatString(R.string.current_co2, device.getCurrentCO2()));
@@ -41,14 +46,14 @@ public class DeviceArrayAdapter extends ArrayAdapter<Device> {
         float deltaTemp = device.getDeltaTemperature();
         holder.getTvTemperatureChanged().setTextColor(getColor(deltaTemp, R.color.increase_temperature, R.color.decrease_temperature));
         holder.getTvTemperatureChanged().setText(formatString(R.string.change_temperature, deltaTemp));
-        return convertView;
+
     }
 
     private String formatString(int id, Object... format){
-        return getContext().getString(id, format);
+        return context.getString(id, format);
     }
 
     private int getColor(float values, int inc, int dec) {
-        return  getContext().getResources().getColor(values == 0.0f ? R.color.no_change : (values < 0 ? dec : inc));
+        return  context.getResources().getColor(values == 0.0f ? R.color.no_change : (values < 0 ? dec : inc));
     }
 }

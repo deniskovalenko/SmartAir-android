@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="no_change">#ff83837c</color
-        >
+    <color name="primary_color">#ff2f4252</color>
+    <color name="no_change">#ff83837c</color>
     <color name="green">#ff00ff00</color>
     <color name="red">#ffff0000</color>
     <color name="blue">#c80605ff</color>

@@ -13,6 +13,11 @@
         android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme">
 
+        <provider
+            android:exported="false"
+            android:authorities="com.smartair.app.authority"
+            android:name=".components.provider.SmartAirProvider"/>
+
         <!--Service-->
         <service android:name=".components.SmartAirSpiceService" />
 

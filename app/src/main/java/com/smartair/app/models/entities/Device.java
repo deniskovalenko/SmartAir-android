@@ -5,9 +5,9 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import com.smartair.app.components.database.DbEntity;
+import org.jetbrains.annotations.NotNull;
 
-public class Device extends BaseEntity implements DbEntity<Device>{
+public class Device extends BaseEntity {
     private String deviceId;
     private String deviceName;
 //    private int delay;
@@ -86,23 +86,62 @@ public class Device extends BaseEntity implements DbEntity<Device>{
         this.deltaHumidity = deltaHumidity;
     }
 
-    @Override
     public ContentValues toCV() {
-        return null;
+        ContentValues cv = new ContentValues();
+        cv.put(Contract._ID, deviceId);
+        cv.put(Contract.DEVICE_NAME, deviceName);
+        cv.put(Contract.CURRENT_CO2, currentCO2);
+        cv.put(Contract.DELTA_CO2, deltaCO2);
+        cv.put(Contract.CURRENT_TEMPERATURE, currentTemperature);
+        cv.put(Contract.DELTA_TEMPERATURE, deltaTemperature);
+        cv.put(Contract.CURRENT_HUMIDITY, currentHumidity);
+        cv.put(Contract.DELTA_HUMIDITY, deltaHumidity);
+        return cv;
     }
 
-    @Override
-    public Device fromCursor(Cursor cursor) {
-        return null;
+    @NotNull
+    public static Device fromCursor(Cursor cursor) {
+        Device device = new Device();
+        device.deviceId = cursor.getString(0);
+        device.deviceName = cursor.getString(1);
+        device.currentCO2 = cursor.getInt(2);
+        device.deltaCO2 = cursor.getInt(3);
+
+        device.currentTemperature = cursor.getFloat(4);
+        device.deltaTemperature = cursor.getFloat(5);
+        device.currentHumidity = cursor.getFloat(6);
+        device.deltaHumidity = cursor.getFloat(7);
+
+        return device;
+
     }
 
     public static String createTableQuery() {
         Log.d(Device.class.getSimpleName(), "create table");
-        return String.format("create table %s (%s text primary key, %s text)", Contract.TABLE_NAME, Contract._ID, Contract.DEVICE_NAME);
+        return String.format("create table %s (%s text primary key, %s text, %s integer, %s integer, %s real, %s real, %s real, %s real)",
+                Contract.TABLE_NAME,
+                Contract._ID,
+                Contract.DEVICE_NAME,
+                Contract.CURRENT_CO2,
+                Contract.DELTA_CO2,
+                Contract.CURRENT_TEMPERATURE,
+                Contract.DELTA_TEMPERATURE,
+                Contract.CURRENT_HUMIDITY,
+                Contract.DELTA_HUMIDITY);
     }
 
     public static class Contract implements BaseColumns{
-        public static String DEVICE_NAME = "deviceName";
         public static String TABLE_NAME = "devices";
+
+        public static String DEVICE_NAME = "deviceName";
+
+        public static String CURRENT_CO2 = "currentCo2";
+        public static String DELTA_CO2 = "deltaCO2";
+        public static String CURRENT_TEMPERATURE = "currentTemperature";
+        public static String DELTA_TEMPERATURE = "deltaTemperature";
+        public static String CURRENT_HUMIDITY = "currentHumidity";
+        public static String DELTA_HUMIDITY = "deltaHumidity";
+
+
     }
 }
