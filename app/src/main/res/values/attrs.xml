@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ToolbarWidget">
+        <attr name="titleText" format="string" localization="suggested" />
+        <attr name="subtitleText" format="string"/>
+        <attr name="titleColor" format="color" />
+        <attr name="subtitleColor" format="color"/>
+        <attr name="titleTextSize" format="dimension"/>
+        <attr name="subtitleTextSize" format="dimension"/>
+        <attr name="gravityTitles">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+    </declare-styleable>
+   <!--<declare-styleable name="CounterIcon">-->
+       <!--<attr name="iconSource" format="reference"/>-->
+       <!--<attr name="iconWidth"  format="dimension"/>-->
+       <!--<attr name="iconHeight" format="dimension"/>-->
+       <!--<attr name="counterSize" format="dimension"/>-->
+       <!--<attr name="counterBackground" format="reference"/>-->
+       <!--<attr name="counterPaddingRight" format="dimension"/>-->
+       <!--<attr name="counterPaddingLeft" format="dimension"/>-->
+       <!--<attr name="counterValue" format="integer"/>-->
+   <!--</declare-styleable>-->
+</resources>

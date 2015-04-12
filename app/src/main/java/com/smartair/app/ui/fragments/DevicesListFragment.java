@@ -1,12 +1,15 @@
 package com.smartair.app.ui.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -27,15 +30,26 @@ import com.smartair.app.models.requests.GetDevicesRequest;
 import com.smartair.app.models.responses.GetDevicesResponse;
 import com.smartair.app.ui.activities.StatisticActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DevicesListFragment extends BaseRefreshFragment implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     @InjectView(R.id.list)
     ListView list;
 
+    private final String UPDATE_KEY = "update_key";
     protected final String DEFAULT_USER = "700caba5-9d40-4d34-9d6c-b15e40c5425f";
+    private SharedPreferences preferences;
 
     public static DevicesListFragment getInstance() {
         return new DevicesListFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        preferences = getActivity().getSharedPreferences("smartAir", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -44,10 +58,21 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
         initView();
         initializeLoader();
         requestOnServer();
+
+
     }
 
     protected void initView() {
+        updateLastDate(preferences.getLong(UPDATE_KEY, -1));
         list.setAdapter(new DeviceCursorAdapter(getActivity(), null));
+    }
+
+    private void updateLastDate(long lastUpdate) {
+        toolbar.setVisibleSubtitle(lastUpdate != -1);
+        if (lastUpdate != -1) {
+            SimpleDateFormat dt = new SimpleDateFormat("dd.MM hh:mm");
+            ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(String.format("Last update: %s", dt.format(new Date(lastUpdate))));
+        }
     }
 
     @Override
@@ -88,6 +113,9 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
                     db.insert(Device.Contract.TABLE_NAME, null, device.toCV());
 
                 restartCursorLoader();
+                long time = System.currentTimeMillis();
+                updateLastDate(time);
+                preferences.edit().putLong(UPDATE_KEY, time).apply();
             }
 
             @Override
@@ -102,8 +130,7 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), StatisticActivity.class);
-        Device device = (Device) parent.getItemAtPosition(position);
-        intent.putExtra(IntentConstants.DEVICE_ID, device.getDeviceId());
+        intent.putExtra(IntentConstants.DEVICE_ID, ((Cursor) parent.getItemAtPosition(position)).getString(0));
         startActivity(intent);
     }
 

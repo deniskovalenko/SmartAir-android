@@ -55,7 +55,9 @@ public class Indication {
     public static String createTableQuery() {
         Log.d(Indication.class.getSimpleName(), "create table");
         return String.format("create table %s (%s text primary key, %s text)",
-                Contract.TABLE_NAME, Contract._ID, Contract.DEVICE_NAME);
+                Contract.TABLE_NAME,
+                Contract._ID,
+                Contract.DEVICE_NAME);
     }
 
     public static class Contract implements BaseColumns {

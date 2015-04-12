@@ -6,10 +6,11 @@ import android.support.v7.widget.Toolbar;
 
 import butterknife.InjectView;
 import com.smartair.app.R;
+import com.smartair.app.ui.widgets.ToolbarWidget;
 
 public abstract class BaseRefreshFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     @InjectView(R.id.toolbar)
-    Toolbar toolbar;
+    ToolbarWidget toolbar;
 
     @InjectView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
