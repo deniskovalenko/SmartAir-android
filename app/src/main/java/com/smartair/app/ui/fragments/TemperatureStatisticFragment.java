@@ -14,6 +14,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.InjectView;
 import com.smartair.app.R;
@@ -24,13 +25,13 @@ import com.smartair.app.models.entities.Indication;
 import com.smartair.app.models.requests.GetStatisticRequest;
 import com.smartair.app.models.responses.GetStatisticResponse;
 
-public class ChartStatisticFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class TemperatureStatisticFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     @InjectView(R.id.chartTemperature)
     LineChart chartTemperature;
 
 
-    public static ChartStatisticFragment getInstance() {
-        return new ChartStatisticFragment();
+    public static TemperatureStatisticFragment getInstance() {
+        return new TemperatureStatisticFragment();
     }
 
     @Override
@@ -143,16 +144,13 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
 
 //                SimpleDateFormat formatDate = new SimpleDateFormat("hh:mm");
                 ArrayList<String> xData = new ArrayList<>();
-                ArrayList<Entry> temperatures = new ArrayList<>();
-                int index = 0;
                 SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
                 for (Indication indication : indications) {
                     xData.add(dateFormat.format(new Date(indication.getDate())));
-                    temperatures.add(new Entry(indication.getCo2(), index++));
                 }
 
                 // create a dataset and give it a type
-                LineDataSet set1 = createLineDataSet(temperatures, "Temperatures");
+                LineDataSet set1 = createLineDataSet(getEntries(indications), "Temperatures");
 
                 // create a data object with the datasets
                 LineData data = new LineData(xData, set1);
@@ -170,5 +168,14 @@ public class ChartStatisticFragment extends BaseFragment implements SwipeRefresh
                 chartTemperature.invalidate();
             }
         });
+    }
+
+    protected ArrayList<Entry> getEntries(List<Indication> indications) {
+        ArrayList<Entry> entries = new ArrayList<>(indications.size());
+        int index = 0;
+        for (Indication indication : indications)
+            entries.add(new Entry(indication.getTemperature(), index++));
+
+        return entries;
     }
 }
