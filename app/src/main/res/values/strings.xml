@@ -9,4 +9,9 @@
     <string name="change_temperature">%+.1f</string>
     <string name="change_co2" >%+d</string>
     <string name="change_humidity" >%+.1f</string>
+
+    <!--TABS-->
+    <string name="tab_temperature">Temperature</string>
+    <string name="tab_co2">CO2</string>
+    <string name="tab_humidity">Humidity</string>
 </resources>

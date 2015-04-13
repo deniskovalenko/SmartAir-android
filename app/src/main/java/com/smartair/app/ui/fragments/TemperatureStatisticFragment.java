@@ -26,11 +26,13 @@ import java.util.Date;
 import butterknife.InjectView;
 import com.smartair.app.R;
 import com.smartair.app.components.provider.SmartAirProvider;
-import com.smartair.app.constants.IntentConstants;
 import com.smartair.app.constants.LoaderConstants;
 import com.smartair.app.models.entities.Indication;
 
 public class TemperatureStatisticFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    protected static final String DEVICE_ID_ARG = "deviceId";
+    protected String deviceId;
+
     @InjectView(R.id.chart)
     LineChart chart;
 
@@ -42,9 +44,18 @@ public class TemperatureStatisticFragment extends BaseFragment implements Loader
         }
     };
 
+    public static TemperatureStatisticFragment getInstance(String deviceId) {
+        Bundle args = new Bundle();
+        args.putString(DEVICE_ID_ARG, deviceId);
+        TemperatureStatisticFragment fragment = new TemperatureStatisticFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-    public static TemperatureStatisticFragment getInstance() {
-        return new TemperatureStatisticFragment();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        deviceId = getArguments().getString(DEVICE_ID_ARG);
     }
 
     @Override
@@ -71,7 +82,6 @@ public class TemperatureStatisticFragment extends BaseFragment implements Loader
 
     @Override
     protected void setListeners() {
-
     }
 
     private void initializeLoader() {
@@ -142,7 +152,7 @@ public class TemperatureStatisticFragment extends BaseFragment implements Loader
         return new CursorLoader(getActivity(),
                 SmartAirProvider.INDICATION_CONTENT_URI,
                 new String[] {Indication.Contract.DATE, indicationColumn()},
-                Indication.Contract.DEVICE_ID + "=?", new String[] {getActivity().getIntent().getStringExtra(IntentConstants.DEVICE_ID)},
+                Indication.Contract.DEVICE_ID + "=?", new String[] {deviceId},
                 null);
     }
 

@@ -38,9 +38,10 @@ public class StatisticActivity extends BaseActivity {
 
     @Override
     protected void onViewCreated() {
+        String deviceId = getIntent().getStringExtra(IntentConstants.DEVICE_ID);
         requestOnServer();
-        initActionBar();
-        viewPager.setAdapter(new StatisticPagerAdapter(getSupportFragmentManager()));
+        initActionBar(deviceId);
+        viewPager.setAdapter(new StatisticPagerAdapter(this, getSupportFragmentManager(), deviceId));
         slidingTabLayout.setViewPager(viewPager);
     }
 
@@ -61,12 +62,12 @@ public class StatisticActivity extends BaseActivity {
         });
     }
 
-    private void initActionBar() {
+    private void initActionBar(String deviceId) {
         setSupportActionBar(toolbar);
         SQLiteDatabase db = DatabaseHelper.getInstance().getReadableDatabase();
         Cursor cursor = db.query(Device.Contract.TABLE_NAME,
                 new String[]{Device.Contract.DEVICE_NAME},
-                "_id=?", new String[]{getIntent().getStringExtra(IntentConstants.DEVICE_ID)},
+                "_id=?", new String[]{deviceId},
                 null, null, null);
         cursor.moveToFirst();
         getSupportActionBar().setTitle(cursor.getString(0));
