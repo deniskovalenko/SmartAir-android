@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -53,7 +54,7 @@ public class StatisticActivity extends BaseActivity {
             public void onRequestSuccess(GetStatisticResponse indications) {
                 Log.d("TEST_TAG", "onRequestSuccess size = " + indications.size());
                 SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
-                db.delete(Indication.Contract.TABLE_NAME, Indication.Contract.DEVICE_ID + "=?", new String[] {deviceId});
+                db.delete(Indication.Contract.TABLE_NAME, Indication.Contract.DEVICE_ID + "=?", new String[]{deviceId});
                 for (Indication indication : indications)
                     db.insert(Indication.Contract.TABLE_NAME, null, indication.toCV());
                 Log.d("TEST_TAG", "notifyChange");
@@ -72,6 +73,8 @@ public class StatisticActivity extends BaseActivity {
         cursor.moveToFirst();
         getSupportActionBar().setTitle(cursor.getString(0));
         cursor.close();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_back);
     }
 
     @Override
@@ -82,5 +85,15 @@ public class StatisticActivity extends BaseActivity {
     @Override
     protected void findView() {
         ButterKnife.inject(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
