@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.smartair.app.constants.DatabaseConstants;
 import com.smartair.app.models.entities.Device;
+import com.smartair.app.models.entities.Indication;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
     private static DatabaseHelper instance;
@@ -26,6 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(Device.createTableQuery());
+        db.execSQL(Indication.createTableQuery());
     }
 
     @Override

@@ -1,7 +1,15 @@
 package com.smartair.app.ui.fragments;
 
+import android.annotation.SuppressLint;
+import android.database.ContentObserver;
+import android.database.Cursor;
 import android.graphics.Color;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -14,20 +22,25 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.InjectView;
 import com.smartair.app.R;
-import com.smartair.app.SmartAirApplication;
-import com.smartair.app.components.SimpleRetrofitCallback;
+import com.smartair.app.components.provider.SmartAirProvider;
 import com.smartair.app.constants.IntentConstants;
+import com.smartair.app.constants.LoaderConstants;
 import com.smartair.app.models.entities.Indication;
-import com.smartair.app.models.requests.GetStatisticRequest;
-import com.smartair.app.models.responses.GetStatisticResponse;
 
-public class TemperatureStatisticFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
-    @InjectView(R.id.chartTemperature)
-    LineChart chartTemperature;
+public class TemperatureStatisticFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    @InjectView(R.id.chart)
+    LineChart chart;
+
+    private ContentObserver contentObserver = new ContentObserver(null) {
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            Log.d("TEST_TAG", "contentObserver onChange" + this);
+            forceStart();
+        }
+    };
 
 
     public static TemperatureStatisticFragment getInstance() {
@@ -41,8 +54,19 @@ public class TemperatureStatisticFragment extends BaseFragment implements SwipeR
 
     @Override
     protected void onViewCreated() {
+        Log.d("TEST_TAG", "onViewCreated" + this);
         initView();
-        requestOnServer();
+        initializeLoader();
+        getActivity().getContentResolver().registerContentObserver(SmartAirProvider.INDICATION_CONTENT_URI, true, contentObserver);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        Log.d("TEST_TAG", "onDestroyView" + this);
+        getActivity().getContentResolver().unregisterContentObserver(contentObserver);
+        getActivity().getSupportLoaderManager().destroyLoader(getLoaderId());
+        super.onDestroyView();
     }
 
     @Override
@@ -50,82 +74,58 @@ public class TemperatureStatisticFragment extends BaseFragment implements SwipeR
 
     }
 
+    private void initializeLoader() {
+        Loader loader = getActivity().getSupportLoaderManager().getLoader(getLoaderId());
+        if (loader == null)
+            getActivity().getSupportLoaderManager().initLoader(getLoaderId(), null, this);
+        else
+            restartCursorLoader();
+    }
+
+    protected void restartCursorLoader() {
+        getActivity().getSupportLoaderManager().restartLoader(getLoaderId(), null, this);
+    }
+
+    protected void forceStart() {
+        getActivity().getSupportLoaderManager().getLoader(getLoaderId()).forceLoad();
+    }
+
     protected void initView() {
 
         // no description text
-        chartTemperature.setDescription("");
+        chart.setDescription("");
 
         // enable value highlighting
-        chartTemperature.setHighlightEnabled(true);
+        chart.setHighlightEnabled(true);
 
         // enable touch gestures
-        chartTemperature.setTouchEnabled(true);
+        chart.setTouchEnabled(true);
 
         // enable scaling and dragging
-        chartTemperature.setDragEnabled(true);
-        chartTemperature.setScaleEnabled(true);
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        chartTemperature.setPinchZoom(false);
+        chart.setPinchZoom(false);
 
-        chartTemperature.setDrawGridBackground(false);
+        chart.setDrawGridBackground(false);
 
-        XAxis x = chartTemperature.getXAxis();
+        XAxis x = chart.getXAxis();
         x.setEnabled(true);
 
-        YAxis y = chartTemperature.getAxisLeft();
+        YAxis y = chart.getAxisLeft();
         y.setLabelCount(5);
         y.setEnabled(true);
 
-        chartTemperature.getAxisRight().setEnabled(false);
-
-
-//        // add data
-//        setData(6, 50);
-//
-//        chartTemperature.getLegend().setEnabled(false);
-//
-//        chartTemperature.animateXY(2000, 2000);
-//
-//        // dont forget to refresh the drawing
-//        chartTemperature.invalidate();
+        chart.getAxisRight().setEnabled(false);
     }
 
-    private void setData(int count, float range) {
-
-        ArrayList<String> xVals = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            xVals.add("17:" + String.format("%2d", i * 10));
-        }
-
-        ArrayList<Entry> vals1 = new ArrayList<>();
-
-        for (int i = 0; i < count; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult) + 20;
-            vals1.add(new Entry(val, i));
-        }
-
-        // create a data object with the datasets
-        LineDataSet set1 = createLineDataSet(vals1, "DataSet 1");
-        LineData data = new LineData(xVals, set1);
-        data.setValueTextSize(9f);
-        data.setDrawValues(false);
-
-        // set data
-        chartTemperature.setData(data);
-    }
-
-    @Override
-    public void onRefresh() {
-        requestOnServer();
-    }
-
-    public LineDataSet createLineDataSet(ArrayList<Entry> vals1, String deacription) {
+    protected LineDataSet createLineDataSet(ArrayList<Entry> vals1, String deacription) {
         // create a dataset and give it a type
         LineDataSet set1 = new LineDataSet(vals1, deacription);
         set1.setDrawCubic(true);
         set1.setCubicIntensity(0.2f);
+
         //set1.setDrawFilled(true);
         set1.setDrawCircles(false);
         set1.setLineWidth(2f);
@@ -136,46 +136,51 @@ public class TemperatureStatisticFragment extends BaseFragment implements SwipeR
         return set1;
     }
 
-    protected void requestOnServer() {
-        SmartAirApplication.getInstance().getSpiceManager().execute(new GetStatisticRequest(getActivity().getIntent().getStringExtra(IntentConstants.DEVICE_ID)), new SimpleRetrofitCallback<GetStatisticResponse>() {
-
-            @Override
-            public void onRequestSuccess(GetStatisticResponse indications) {
-
-//                SimpleDateFormat formatDate = new SimpleDateFormat("hh:mm");
-                ArrayList<String> xData = new ArrayList<>();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
-                for (Indication indication : indications) {
-                    xData.add(dateFormat.format(new Date(indication.getDate())));
-                }
-
-                // create a dataset and give it a type
-                LineDataSet set1 = createLineDataSet(getEntries(indications), "Temperatures");
-
-                // create a data object with the datasets
-                LineData data = new LineData(xData, set1);
-//                data.setValueTypeface(tf);
-                data.setValueTextSize(9f);
-                data.setDrawValues(false);
-// set data
-                chartTemperature.setData(data);
-//                LineDataSet xDataSet = new LineDataSet(indications, "values");
-//                xAxis.
-
-                chartTemperature.getLegend().setEnabled(false);
-
-                chartTemperature.animateXY(2000, 2000);
-                chartTemperature.invalidate();
-            }
-        });
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.d("TEST_TAG", "onCreateLoader " + this);
+        return new CursorLoader(getActivity(),
+                SmartAirProvider.INDICATION_CONTENT_URI,
+                new String[] {Indication.Contract.DATE, indicationColumn()},
+                Indication.Contract.DEVICE_ID + "=?", new String[] {getActivity().getIntent().getStringExtra(IntentConstants.DEVICE_ID)},
+                null);
     }
 
-    protected ArrayList<Entry> getEntries(List<Indication> indications) {
-        ArrayList<Entry> entries = new ArrayList<>(indications.size());
-        int index = 0;
-        for (Indication indication : indications)
-            entries.add(new Entry(indication.getTemperature(), index++));
+    @SuppressLint("SimpleDateFormat")
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d("TEST_TAG", "onLoadFinished " + data.getCount() + " || " + this);
+        SimpleDateFormat formatDate = new SimpleDateFormat("hh:mm");
+        ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<String> dates = new ArrayList<>();
+        while (data.moveToNext()) {
+            dates.add(formatDate.format(new Date(data.getLong(0))));
+            entries.add(toEntry(data, 1, data.getPosition()));
+        }
+        LineDataSet dataSet = createLineDataSet(entries, indicationColumn());
+        LineData lineData = new LineData(dates, dataSet);
+        lineData.setValueTextSize(9f);
+        lineData.setDrawValues(false);
 
-        return entries;
+        chart.setData(lineData);
+        chart.getLegend().setEnabled(false);
+        chart.animateXY(2000, 2000);
+        chart.invalidate();
+    }
+
+    protected Entry toEntry(Cursor cursor, int column, int position) {
+        return new Entry(cursor.getFloat(column), position);
+    }
+
+    protected String indicationColumn() {
+        return Indication.Contract.TEMPERATURE;
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
+
+    protected int getLoaderId() {
+        return LoaderConstants.INDICATE_TEMPERATURE_LOADER;
     }
 }

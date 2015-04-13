@@ -110,7 +110,7 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
             public void onRequestSuccess(GetDevicesResponse devices) {
                 SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
                 for (Device device : devices)
-                    db.insert(Device.Contract.TABLE_NAME, null, device.toCV());
+                    db.replace(Device.Contract.TABLE_NAME, null, device.toCV());
 
                 restartCursorLoader();
                 long time = System.currentTimeMillis();
@@ -136,7 +136,7 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), SmartAirProvider.CONTACT_CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getActivity(), SmartAirProvider.DEVICE_CONTENT_URI, null, null, null, null);
     }
 
     @Override

@@ -66,7 +66,7 @@ public class Indication {
 
     public static String createTableQuery() {
         Log.d(Indication.class.getSimpleName(), "create table");
-        return String.format("create table %s (%s int autoincrement primary key, %s int, %s text, %s int, %s real, %s real)",
+        return String.format("create table %s (%s integer primary key autoincrement, %s integer, %s text, %s integer, %s real, %s real)",
                 Contract.TABLE_NAME,
                 Contract._ID,
                 Contract.DATE,
