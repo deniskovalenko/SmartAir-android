@@ -130,20 +130,20 @@ public class TemperatureStatisticFragment extends BaseFragment implements Loader
         chart.getAxisRight().setEnabled(false);
     }
 
-    protected LineDataSet createLineDataSet(ArrayList<Entry> vals1, String deacription) {
-        // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(vals1, deacription);
-        set1.setDrawCubic(true);
-        set1.setCubicIntensity(0.2f);
+    protected LineDataSet createLineDataSet(ArrayList<Entry> entries, String description) {
+        // create a dataSet and give it a type
+        LineDataSet dataSet = new LineDataSet(entries, description);
+        dataSet.setDrawCubic(true);
+        dataSet.setCubicIntensity(0.2f);
 
-        //set1.setDrawFilled(true);
-        set1.setDrawCircles(false);
-        set1.setLineWidth(2f);
-        set1.setCircleSize(5f);
-        set1.setHighLightColor(Color.rgb(244, 117, 117));
-        set1.setColor(Color.rgb(104, 241, 175));
-        set1.setFillColor(ColorTemplate.getHoloBlue());
-        return set1;
+        //dataSet.setDrawFilled(true);
+        dataSet.setDrawCircles(false);
+        dataSet.setLineWidth(2f);
+        dataSet.setCircleSize(5f);
+        dataSet.setHighLightColor(Color.rgb(244, 117, 117));
+        dataSet.setColor(Color.rgb(104, 241, 175));
+        dataSet.setFillColor(ColorTemplate.getHoloBlue());
+        return dataSet;
     }
 
     @Override
@@ -160,7 +160,7 @@ public class TemperatureStatisticFragment extends BaseFragment implements Loader
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.d("TEST_TAG", "onLoadFinished " + data.getCount() + " || " + this);
-        SimpleDateFormat formatDate = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat formatDate = new SimpleDateFormat(getString(R.string.chart_time_format));
         ArrayList<Entry> entries = new ArrayList<>();
         ArrayList<String> dates = new ArrayList<>();
         while (data.moveToNext()) {

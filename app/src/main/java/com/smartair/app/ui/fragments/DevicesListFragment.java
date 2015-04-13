@@ -1,5 +1,6 @@
 package com.smartair.app.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -58,8 +59,6 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
         initView();
         initializeLoader();
         requestOnServer();
-
-
     }
 
     protected void initView() {
@@ -67,11 +66,13 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
         list.setAdapter(new DeviceCursorAdapter(getActivity(), null));
     }
 
+    @SuppressLint("SimpleDateFormat")
     private void updateLastDate(long lastUpdate) {
         toolbar.setVisibleSubtitle(lastUpdate != -1);
         if (lastUpdate != -1) {
-            SimpleDateFormat dt = new SimpleDateFormat("dd.MM hh:mm");
-            ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(String.format("Last update: %s", dt.format(new Date(lastUpdate))));
+            SimpleDateFormat dt = new SimpleDateFormat(getString(R.string.last_update_format));
+            ((ActionBarActivity) getActivity()).getSupportActionBar()
+                    .setSubtitle(getString(R.string.last_update, dt.format(new Date(lastUpdate))));
         }
     }
 

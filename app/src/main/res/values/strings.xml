@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">SmartAir</string>
 
+    <string name="last_update">Last update: %s</string>
+    <string name="last_update_format">dd.MM hh:mm</string>
+    <string name="chart_time_format">hh:mm</string>
     <!--device item-->
     <string name="current_temperature" >%s °C</string>
     <string name="current_co2" >CO2 %s ppm</string>
