@@ -40,7 +40,7 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
     ListView list;
 
     private final String UPDATE_KEY = "update_key";
-    protected final String DEFAULT_USER = "700caba5-9d40-4d34-9d6c-b15e40c5425f";
+    protected final String DEFAULT_USER = "f03ad31e-d3cc-4635-9809-7185864f6398";
     private SharedPreferences preferences;
 
     public static DevicesListFragment getInstance() {
