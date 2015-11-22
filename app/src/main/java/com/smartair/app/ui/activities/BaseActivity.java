@@ -1,12 +1,12 @@
 package com.smartair.app.ui.activities;
 
+
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseActivity extends ActionBarActivity {

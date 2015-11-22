@@ -46,4 +46,7 @@ dependencies {
 
 //    ui
     compile 'com.github.PhilJay:MPAndroidChart:v2.0.9'
+//    for GCM notifications
+    apply plugin: 'com.google.gms.google-services'
+    compile "com.google.android.gms:play-services:8.3.0"
 }
