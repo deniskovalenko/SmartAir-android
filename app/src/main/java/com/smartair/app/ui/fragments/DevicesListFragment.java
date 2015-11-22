@@ -26,6 +26,7 @@ import com.smartair.app.components.database.DatabaseHelper;
 import com.smartair.app.components.provider.SmartAirProvider;
 import com.smartair.app.constants.IntentConstants;
 import com.smartair.app.constants.LoaderConstants;
+import com.smartair.app.constants.RestConstants;
 import com.smartair.app.models.entities.Device;
 import com.smartair.app.models.requests.GetDevicesRequest;
 import com.smartair.app.models.responses.GetDevicesResponse;
@@ -40,7 +41,7 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
     ListView list;
 
     private final String UPDATE_KEY = "update_key";
-    protected final String DEFAULT_USER = "f03ad31e-d3cc-4635-9809-7185864f6398";
+
     private SharedPreferences preferences;
 
     public static DevicesListFragment getInstance() {
@@ -58,7 +59,7 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
         super.onViewCreated();
         initView();
         initializeLoader();
-        requestOnServer();
+        getDevicesRequestToServer();
     }
 
     protected void initView() {
@@ -89,7 +90,7 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
 
     @Override
     public void onRefresh() {
-        requestOnServer();
+        getDevicesRequestToServer();
     }
 
     private void initializeLoader() {
@@ -104,8 +105,8 @@ public class DevicesListFragment extends BaseRefreshFragment implements AdapterV
         getActivity().getSupportLoaderManager().restartLoader(LoaderConstants.DEVICE_LIST_LOADER, null, this);
     }
 
-    protected void requestOnServer() {
-        SmartAirApplication.getInstance().getSpiceManager().execute(new GetDevicesRequest(DEFAULT_USER),
+    protected void getDevicesRequestToServer() {
+        SmartAirApplication.getInstance().getSpiceManager().execute(new GetDevicesRequest(RestConstants.DEFAULT_USER),
                 new SimpleRetrofitCallback<GetDevicesResponse>() {
             @Override
             public void onRequestSuccess(GetDevicesResponse devices) {

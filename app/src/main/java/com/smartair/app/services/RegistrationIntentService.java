@@ -26,8 +26,14 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.smartair.app.R;
+import com.smartair.app.SmartAirApplication;
+import com.smartair.app.components.SimpleRetrofitCallback;
 import com.smartair.app.constants.QuickstartPreferences;
+import com.smartair.app.constants.RestConstants;
+import com.smartair.app.models.requests.SendGcmTokenRequest;
+import com.smartair.app.models.responses.SendGcmTokenResponse;
 
 import java.io.IOException;
 
@@ -35,6 +41,7 @@ public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
+    SharedPreferences sharedPreferences;
 
     public RegistrationIntentService() {
         super(TAG);
@@ -42,7 +49,7 @@ public class RegistrationIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
             // [START register_for_gcm]
@@ -63,16 +70,13 @@ public class RegistrationIntentService extends IntentService {
             // Subscribe to topic channels
             subscribeTopics(token);
 
-            // You should store a boolean that indicates whether the generated token has been
-            // sent to your server. If the boolean is false, send the token to your server,
-            // otherwise your server should have already received the token.
-            sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, true).apply();
+
             // [END register_for_gcm]
         } catch (Exception e) {
             Log.d(TAG, "Failed to complete token refresh", e);
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
-            sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false).apply();
+           notifyTokenSend(false);
         }
         // Notify UI that registration has completed, so the progress indicator can be hidden.
         Intent registrationComplete = new Intent(QuickstartPreferences.REGISTRATION_COMPLETE);
@@ -89,6 +93,19 @@ public class RegistrationIntentService extends IntentService {
      */
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
+        SmartAirApplication.getInstance().getSpiceManager().execute(new SendGcmTokenRequest(RestConstants.DEFAULT_USER, token),
+                new SimpleRetrofitCallback<SendGcmTokenResponse>() {
+                    @Override
+                    public void onRequestSuccess(SendGcmTokenResponse devices) {
+                       notifyTokenSend(true);
+                    }
+
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+                        super.onRequestFailure(spiceException);
+                        notifyTokenSend(false);
+                    }
+                });
     }
 
     /**
@@ -106,4 +123,12 @@ public class RegistrationIntentService extends IntentService {
     }
     // [END subscribe_topics]
 
+
+    public void notifyTokenSend(boolean success) {
+        // You should store a boolean that indicates whether the generated token has been
+        // sent to your server. If the boolean is false, send the token to your server,
+        // otherwise your server should have already received the token.
+        sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, success).apply();
+        Log.i(TAG, "Token has been sent to server with result " + success);
+    }
 }

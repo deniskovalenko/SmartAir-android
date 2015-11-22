@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -25,7 +26,6 @@ public class MainActivity extends BaseActivity {
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private ProgressBar mRegistrationProgressBar;
-    private TextView mInformationTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,13 +41,12 @@ public class MainActivity extends BaseActivity {
                 boolean sentToken = sharedPreferences
                         .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
-                    mInformationTextView.setText(getString(R.string.gcm_send_message));
+                    Toast.makeText(getApplicationContext(), getString(R.string.gcm_send_message), Toast.LENGTH_LONG).show();
                 } else {
-                    mInformationTextView.setText(getString(R.string.token_error_message));
+                    Toast.makeText(getApplicationContext(), getString(R.string.token_error_message), Toast.LENGTH_LONG).show();
                 }
             }
         };
-        mInformationTextView = (TextView) findViewById(R.id.informationTextView);
 
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
